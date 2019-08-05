@@ -14,7 +14,14 @@ class ExamController extends Controller
      */
     public function index()
     {
-        //
+        $exams = Exam::latest()->paginate(5);
+
+
+
+        return view('exams.index',compact('exams'))
+
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+
     }
 
     /**
@@ -24,7 +31,7 @@ class ExamController extends Controller
      */
     public function create()
     {
-        //
+        return view('exams.create');
     }
 
     /**
@@ -39,9 +46,9 @@ class ExamController extends Controller
             'name' => 'required'
         ]);
 
-        $request->save();
+        Exam::create($request->all());
 
-        return redirect('exams.index')->with('success', 'New Exam Added');
+        return redirect()->route('exams.index')->with('success', 'New Exam Added');
     }
 
     /**
@@ -50,9 +57,9 @@ class ExamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Exam $exam)
     {
-        //
+        return view('exams.view', compact('exam'));
     }
 
     /**
@@ -61,9 +68,9 @@ class ExamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Exam $exam)
     {
-        //
+        return view('exams.edit', compact('exam'));
     }
 
     /**
@@ -73,9 +80,16 @@ class ExamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Exam $exam)
     {
-        //
+        $request->validate([
+            'name' => 'required'
+        ]);
+
+        $exam->update($request->all());
+
+        return redirect()->route('exams.index')
+                        ->with('success', 'Exam updated successfully');
     }
 
     /**
@@ -84,8 +98,11 @@ class ExamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Exam $exam)
     {
-        //
+        $exam->delete();
+
+        return redirect()->route('exams.index')
+                    ->with('success', 'Exam Deleted Successfully');
     }
 }

@@ -15,9 +15,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::middleware(['auth'])->group(function () {
+    Route::resources([
+        'users' => 'UserController',
+        'exams' => 'ExamController',
+        'questions' => 'QuestionController',
+    ]);
+});
 
-Route::resources([
-    'users' => 'UserController',
-    'exams' => 'ExamController',
-    'questions' => 'QuestionController',
-]);
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
