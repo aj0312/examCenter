@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Option extends Model
 {
-    protected $fillable = ['question_id', 'option'];
+    protected $fillable = ['question_id', 'option', 'value'];
 
     public function question() {
-        return $this->belongsTo('App\Question', 'question_id', 'correct_option_id');
+        return $this->belongsTo('App\Question');
     }
 }

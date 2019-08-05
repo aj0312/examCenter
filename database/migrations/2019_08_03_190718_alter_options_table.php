@@ -14,6 +14,7 @@ class AlterOptionsTable extends Migration
     public function up()
     {
         Schema::table('options', function (Blueprint $table){
+            $table->string('value', 50);
             $table->foreign('question_id')->references('id')->on('questions');
         });
     }

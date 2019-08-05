@@ -20,7 +20,6 @@ class CreateQuestionsTable extends Migration
             $table->unsignedBigInteger('correct_option_id');
             $table->softDeletes();
 
-            $table->foreign('correct_option_id')->references('id')->on('options');
         });
     }
 

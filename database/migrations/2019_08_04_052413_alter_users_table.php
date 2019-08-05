@@ -15,6 +15,7 @@ class AlterUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('role', ['admin', 'student']);
+            $table->string('username', 30);
         });
     }
 

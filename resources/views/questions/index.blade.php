@@ -16,7 +16,7 @@
 
             <div class="pull-right">
 
-                <a class="btn btn-success" href="{{ route('exams.create') }}"> Add Exam</a>
+                <a class="btn btn-primary" href="{{ route('questions.create') }}"> Add Question</a>
 
             </div>
 
@@ -44,31 +44,31 @@
 
             <th>No</th>
 
-            <th>Name</th>
+            <th>Question</th>
 
             <th width="280px">Action</th>
 
         </tr>
 
-        @foreach ($exams as $exam)
+        @foreach ($questions as $question)
 
         <tr>
 
             <td>{{ ++$i }}</td>
 
-            <td>{{ $exam->name }}</td>
+            <td>{{ $question->question }}</td>
 
             <td>
 
-                <form action="{{ route('exams.destroy',$exam->id) }}" method="POST">
+                <form action="{{ route('questions.destroy',$question->id) }}" method="POST">
 
 
 
-                    <a class="btn btn-info" href="{{ route('exams.show',$exam->id) }}">Show</a>
+                    <a class="btn btn-info" href="{{ route('questions.show',$question->id) }}">Show</a>
 
 
 
-                    <a class="btn btn-primary" href="{{ route('exams.edit',$exam->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('questions.edit',$question->id) }}">Edit</a>
 
 
 
@@ -92,7 +92,7 @@
 
 
 
-    {!! $exams->links() !!}
+    {!! $questions->links() !!}
 
 
 

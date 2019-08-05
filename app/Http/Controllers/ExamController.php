@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Exam;
+use App\Question;
+use App\User;
 
 class ExamController extends Controller
 {
@@ -15,7 +17,6 @@ class ExamController extends Controller
     public function index()
     {
         $exams = Exam::latest()->paginate(5);
-
 
 
         return view('exams.index',compact('exams'))
@@ -31,7 +32,10 @@ class ExamController extends Controller
      */
     public function create()
     {
-        return view('exams.create');
+        $questions = Question::all();
+        $users = User::all()->where('role', '<>', 'admin');
+
+        return view('exams.create', compact(['questions', 'users']));
     }
 
     /**
@@ -42,11 +46,26 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
+        if(!isset($request->exam_questions))
+            return redirect()->route('exams.create')->with('fail', 'Please check at least one question');
+        // if(!isset($request->exam_users))
+        //     return redirect()->route('exams.create')->with('fail', 'Please check at least one user');
+
         $request->validate([
             'name' => 'required'
         ]);
+        $exam = new Exam;
+        $exam->name = $request->name;
+        $exam->save();
+        $exam->questions()->attach($request->marks);
+        // foreach($request->exam_questions as $questionId) {
+        //     $examQuestion = new Exam;
+        //     $examQuestion->questions()->question_id = $questionId;
+        //     $examQuestion->questions()->exam_id = $exam->id;
+        //     $examQuestion->questions()->score = $request->score[$questionId];
 
-        Exam::create($request->all());
+        //     $examQuestion->questions()->save();
+        // }
 
         return redirect()->route('exams.index')->with('success', 'New Exam Added');
     }

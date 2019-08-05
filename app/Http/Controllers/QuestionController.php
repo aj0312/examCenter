@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Question;
+use App\Option;
 
 class QuestionController extends Controller
 {
@@ -13,7 +15,11 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        //
+        $questions = Question::latest()->paginate(5);
+
+        return view('questions.index', compact('questions'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
+        ;
     }
 
     /**
@@ -23,7 +29,7 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        //
+        return view('questions.create');
     }
 
     /**
@@ -34,7 +40,28 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'question' => 'required',
+            'correct_option' => 'required'
+        ]);
+
+        $question = new Question;
+        $question->question = $request->question;
+        $question->correct_option = $request->correct_option;
+
+        $question->save();
+
+        foreach($request->options as $key => $value) {
+            $option = new Option;
+            $option->option = $key;
+            $option->value = $value;
+            $option->question_id = $question->id;
+
+            $option->save();
+        }
+
+        return redirect()->route('questions.index')->with('success', 'Question Added');
+
     }
 
     /**

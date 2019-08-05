@@ -1,29 +1,19 @@
-@extends('layout')
+@extends('layouts.app')
 
 
 
 @section('content')
 
-<div class="row">
 
-    <div class="col-lg-12 margin-tb">
+@if ($message = Session::get('fail'))
 
-        <div class="pull-left">
+<div class="alert alert-danger">
 
-            <h2>New Exam</h2>
-
-        </div>
-
-        <div class="pull-right">
-
-            <a class="btn btn-primary" href="{{ route('exams.index') }}"> Back</a>
-
-        </div>
-
-    </div>
+    <p>{{ $message }}</p>
 
 </div>
 
+@endif
 
 
 @if ($errors->any())
@@ -47,36 +37,67 @@
 @endif
 
 
+<div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">{{ __('Add an Exam') }}</div>
 
-<form action="{{ route('exams.store') }}" method="POST">
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('exams.store') }}">
+                            @csrf
 
-    @csrf
+                            <div class="form-group row">
+                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Exam') }}</label>
 
+                                <div class="col-md-6">
+                                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" required autofocus />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <h5 class="col-md-12 text-md-center">Add Questions to Exam</h5>
+                            </div>
+                            <div class="form-group row">
+                                <div class="card-text col-md-6 text-md-center">Add Question</div>
+                                <div class="card-text col-md-4 text-md-center">Marks</div>
+                            </div>
+                            @foreach($questions as $question)
+                                <div class="form-group row mb-0">
+                                    <div class="col-md-6 text-md-right">
+                                        <input type="checkbox" name="exam_questions[]" value="{{ $question->id }}" />
+                                        <label for="exam_questions[]" >{{ __($question->question) }}</label>
+                                    </div>
+                                    <div class="col-md-4 col-md-offset-1">
+                                        <input type="text" name="marks[{{ $question->id }}]" class="form-control col-md-4" />
+                                    </div>
+                                </div>
 
+                            @endforeach
 
-     <div class="row">
+                            <div class="form-group row">
+                                <h5 class="col-md-12 text-md-center">Assign users to Exam</h5>
+                            </div>
+                            @foreach($users as $user)
+                                <div class="form-group row mb-0">
+                                    <div class="col-md-12 text-md-center">
+                                        <input type="checkbox" name="exam_users[]" value="{{ $question->id }}" />
+                                        <label for="exam_users[]" >{{ __($user->username) }}</label>
+                                    </div>
+                                </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
+                            @endforeach
 
-            <div class="form-group">
-
-                <strong>Name:</strong>
-
-                <input type="text" name="name" class="form-control" placeholder="Name">
-
+                            <div class="form-group row mb-0">
+                                <div class="col-md-8 offset-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ __('Submit') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-
-                <button type="submit" class="btn btn-primary">Submit</button>
-
-        </div>
-
     </div>
-
-
-
-</form>
-
 @endsection

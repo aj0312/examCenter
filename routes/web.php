@@ -23,6 +23,6 @@ Route::middleware(['auth'])->group(function () {
     ]);
 });
 
-Auth::routes();
+Auth::routes(['register' => false, 'password.request' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
